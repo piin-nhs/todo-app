@@ -9,12 +9,12 @@ import java.util.List;
 @Repository
 public interface TodoRepository extends JpaRepository<Todo, Long> {
     
-    // Tìm kiếm todo theo từ khóa trong tiêu đề (không phân biệt hoa thường)
-    List<Todo> findByTitleContainingIgnoreCase(String keyword);
+    // Tìm kiếm todo theo từ khóa trong tiêu đề và sắp xếp theo ID giảm dần (mới nhất lên đầu)
+    List<Todo> findByTitleContainingIgnoreCaseOrderByIdDesc(String keyword);
     
-    // Lọc các todo theo trạng thái hoàn thành (true / false)
-    List<Todo> findByCompleted(Boolean completed);
+    // Lọc các todo theo trạng thái hoàn thành và sắp xếp theo ID giảm dần
+    List<Todo> findByCompletedOrderByIdDesc(Boolean completed);
     
-    // Tìm kiếm và lọc đồng thời
-    List<Todo> findByTitleContainingIgnoreCaseAndCompleted(String keyword, Boolean completed);
+    // Tìm kiếm, lọc đồng thời và sắp xếp theo ID giảm dần
+    List<Todo> findByTitleContainingIgnoreCaseAndCompletedOrderByIdDesc(String keyword, Boolean completed);
 }

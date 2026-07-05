@@ -3,6 +3,7 @@ package iuh.fit.backend.service;
 import iuh.fit.backend.entity.Todo;
 import iuh.fit.backend.repository.TodoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +23,13 @@ public class TodoServiceImpl implements TodoService {
     @Transactional(readOnly = true)
     public List<Todo> getAllTodos(String keyword, Boolean completed) {
         if (keyword != null && !keyword.trim().isEmpty() && completed != null) {
-            return todoRepository.findByTitleContainingIgnoreCaseAndCompleted(keyword.trim(), completed);
+            return todoRepository.findByTitleContainingIgnoreCaseAndCompletedOrderByIdDesc(keyword.trim(), completed);
         } else if (keyword != null && !keyword.trim().isEmpty()) {
-            return todoRepository.findByTitleContainingIgnoreCase(keyword.trim());
+            return todoRepository.findByTitleContainingIgnoreCaseOrderByIdDesc(keyword.trim());
         } else if (completed != null) {
-            return todoRepository.findByCompleted(completed);
+            return todoRepository.findByCompletedOrderByIdDesc(completed);
         }
-        return todoRepository.findAll();
+        return todoRepository.findAll(Sort.by(Sort.Direction.DESC, "id"));
     }
 
     @Override
@@ -41,10 +42,7 @@ public class TodoServiceImpl implements TodoService {
     @Override
     @Transactional
     public Todo createTodo(Todo todo) {
-        // Đảm bảo các thuộc tính mặc định
-        if (todo.getCompleted() == null) {
-            todo.setCompleted(false);
-        }
+        todo.setCompleted(false);
         return todoRepository.save(todo);
     }
 

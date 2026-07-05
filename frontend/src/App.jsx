@@ -9,17 +9,20 @@ import TodoList from './components/TodoList';
 
 function App() {
   const [todos, setTodos] = useState([]);
-  const [keyword, setKeyword] = useState('');
-  const [filter, setFilter] = useState('all');
-  const [editingTodo, setEditingTodo] = useState(null);
-  const [isFormOpen, setIsFormOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('all');
+  const [keyword, setKeyword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
-  const [todoToDelete, setTodoToDelete] = useState(null); // Quản lý custom delete modal
-
-
-  // Lấy ngày hiện tại định dạng như design mẫu (vd: 12 JAN 2016)
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [editingTodo, setEditingTodo] = useState(null);
+  const [todoToDelete, setTodoToDelete] = useState(null);
+  const [sortBy, setSortBy] = useState('newest'); // 'newest' | 'oldest' | 'alphabet'
+  const [isSortDropdownOpen, setIsSortDropdownOpen] = useState(false); // Điều khiển Custom Dropdown
   const [currentDate, setCurrentDate] = useState({ day: '', monthYear: '', weekday: '' });
+
+  // Phân trang (Pagination) state
+  const [currentPage, setCurrentPage] = useState(1);
+  const todosPerPage = 3; // Chỉ hiển thị 3 công việc mỗi trang để tính năng phân trang xuất hiện ngay
 
   useEffect(() => {
     const date = new Date();
@@ -30,6 +33,11 @@ function App() {
     const weekday = weekdays[date.getDay()];
     setCurrentDate({ day, monthYear, weekday });
   }, []);
+
+  // Reset trang về 1 khi người dùng đổi filter hoặc từ khoá tìm kiếm hoặc kiểu sort
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [keyword, filter, sortBy]);
 
   // Fetch danh sách todos từ backend
   const fetchTodos = async () => {
@@ -66,7 +74,6 @@ function App() {
     return () => clearTimeout(delayDebounceFn);
   }, [filter, keyword]);
 
-
   // Thay đổi trạng thái completed
   const handleToggleStatus = async (id, completed) => {
     try {
@@ -95,7 +102,6 @@ function App() {
     }
   };
 
-
   // Xử lý submit Form (Thêm hoặc Sửa)
   const handleFormSubmit = async (data) => {
     try {
@@ -120,12 +126,23 @@ function App() {
     setIsFormOpen(true);
   };
 
+  // Sắp xếp dữ liệu (Client-side sorting)
+  const sortedTodos = [...todos].sort((a, b) => {
+    if (sortBy === 'newest') return b.id - a.id;
+    if (sortBy === 'oldest') return a.id - b.id;
+    if (sortBy === 'alphabet') return a.title.localeCompare(b.title, 'vi', { sensitivity: 'base' });
+    return 0;
+  });
+
+  // Phân trang dữ liệu (Client-side pagination)
+  const indexOfLastTodo = currentPage * todosPerPage;
+  const indexOfFirstTodo = indexOfLastTodo - todosPerPage;
+  const currentTodos = sortedTodos.slice(indexOfFirstTodo, indexOfLastTodo);
+  const totalPages = Math.ceil(sortedTodos.length / todosPerPage);
+
   return (
     <div className="min-h-screen bg-[#ece9e2] text-gray-800 font-sans flex items-center justify-center p-4 antialiased">
       <div className="bg-white max-w-md w-full rounded-lg shadow-sm border border-gray-200/50 flex flex-col relative overflow-visible min-h-[600px] max-h-[850px]">
-
-
-
 
         {/* Header Ngày tháng giống hệt thiết kế mẫu */}
         <div className="px-8 pt-12 pb-8 flex justify-between items-center select-none">
@@ -139,16 +156,11 @@ function App() {
           <span className="text-[11px] font-semibold text-gray-400 tracking-widest uppercase">{currentDate.weekday}</span>
         </div>
 
-
         {/* Cụm Tìm kiếm và Lọc */}
         <div className="px-8 pb-6 space-y-3.5">
           <SearchBar keyword={keyword} setKeyword={setKeyword} />
           <FilterBar currentFilter={filter} onFilterChange={setFilter} />
         </div>
-
-
-
-
 
         {/* Lỗi kết nối (nếu có) */}
         {errorMessage && (
@@ -158,18 +170,129 @@ function App() {
         )}
 
         {/* Danh sách công việc (Cuộn nội dung độc lập) */}
-        <div className="flex-1 overflow-y-auto px-8 pb-24 scrollbar-thin">
+        <div className="flex-1 overflow-y-auto px-8 pb-24 scrollbar-thin flex flex-col">
+          
+          {/* Bộ chọn Sắp xếp (Sorting Selection Selector) tối giản */}
+          {!loading && todos.length > 0 && (
+            <div className="flex justify-between items-center mb-3 select-none flex-shrink-0">
+              <span className="text-[9px] font-bold text-gray-400 tracking-wider uppercase">
+                Danh sách ({todos.length})
+              </span>
+              
+              {/* Custom Combobox Sắp xếp mượt mà */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => setIsSortDropdownOpen(!isSortDropdownOpen)}
+                  className="flex items-center gap-1.5 text-[9px] font-bold text-gray-500 hover:text-emerald-500 tracking-wider uppercase focus:outline-none transition-colors duration-200"
+                >
+                  <span>
+                    {sortBy === 'newest' && 'Mới nhất'}
+                    {sortBy === 'oldest' && 'Cũ nhất'}
+                    {sortBy === 'alphabet' && 'Tên A-Z'}
+                  </span>
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-3 h-3 text-gray-400">
+                    <path fillRule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clipRule="evenodd" />
+                  </svg>
+                </button>
+
+                <AnimatePresence>
+                  {isSortDropdownOpen && (
+                    <>
+                      {/* Backdrop để click ra ngoài là tự động đóng */}
+                      <div className="fixed inset-0 z-10" onClick={() => setIsSortDropdownOpen(false)} />
+                      
+                      <motion.div
+                        initial={{ opacity: 0, y: -6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -6 }}
+                        transition={{ duration: 0.12 }}
+                        className="absolute right-0 mt-1.5 w-24 bg-white border border-gray-100 rounded-md shadow-lg py-1 z-20 overflow-hidden"
+                      >
+                        {[
+                          { value: 'newest', label: 'Mới nhất' },
+                          { value: 'oldest', label: 'Cũ nhất' },
+                          { value: 'alphabet', label: 'Tên A-Z' }
+                        ].map((opt) => (
+                          <button
+                            key={opt.value}
+                            type="button"
+                            onClick={() => {
+                              setSortBy(opt.value);
+                              setIsSortDropdownOpen(false);
+                            }}
+                            className={`w-full text-left px-3 py-2 text-[9px] font-bold tracking-wider uppercase transition-colors ${
+                              sortBy === opt.value
+                                ? 'bg-emerald-50/50 text-[#2ecc71]'
+                                : 'text-gray-500 hover:bg-gray-50 hover:text-gray-800'
+                            }`}
+                          >
+                            {opt.label}
+                          </button>
+                        ))}
+                      </motion.div>
+                    </>
+                  )}
+                </AnimatePresence>
+              </div>
+            </div>
+          )}
+
           {loading ? (
-            <div className="flex justify-center items-center py-12">
+            <div className="flex justify-center items-center py-12 flex-1">
               <div className="w-6 h-6 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
           ) : (
-            <TodoList
-              todos={todos}
-              onToggleStatus={handleToggleStatus}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
-            />
+            <>
+              <TodoList
+                todos={currentTodos}
+                onToggleStatus={handleToggleStatus}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+
+              {/* Bộ điều khiển Phân trang Pagination tối giản */}
+              {!loading && totalPages > 1 && (
+                <div className="flex justify-center items-center gap-2 mt-auto pt-4 pb-2 border-t border-gray-100 select-none flex-shrink-0">
+                  <button
+                    disabled={currentPage === 1}
+                    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                    className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+                    </svg>
+                  </button>
+                  
+                  {Array.from({ length: totalPages }).map((_, idx) => {
+                    const pageNum = idx + 1;
+                    return (
+                      <button
+                        key={pageNum}
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`w-6 h-6 text-[10px] font-bold rounded-md flex items-center justify-center transition-all ${
+                          currentPage === pageNum
+                            ? 'bg-emerald-50 text-[#2ecc71] border border-[#2ecc71]/20'
+                            : 'text-gray-400 hover:text-gray-600 hover:bg-gray-50'
+                        }`}
+                      >
+                        {pageNum}
+                      </button>
+                    );
+                  })}
+
+                  <button
+                    disabled={currentPage === totalPages}
+                    onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                    className="p-1 text-gray-400 hover:text-gray-700 disabled:opacity-30 disabled:hover:text-gray-400 transition-colors"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" className="w-3.5 h-3.5">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                  </button>
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -195,9 +318,6 @@ function App() {
             </svg>
           </button>
         )}
-
-
-
 
         {/* Form Modal sử dụng Framer Motion trượt mượt mà từ dưới lên */}
         <AnimatePresence>
@@ -227,7 +347,6 @@ function App() {
               </motion.div>
             </motion.div>
           )}
-
         </AnimatePresence>
 
         {/* Custom Delete Confirmation Modal sử dụng Framer Motion */}
@@ -238,7 +357,6 @@ function App() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               className="absolute inset-0 bg-white/95 backdrop-blur-sm p-4 md:p-8 flex flex-col justify-center items-center rounded-lg z-30 select-none"
-
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
