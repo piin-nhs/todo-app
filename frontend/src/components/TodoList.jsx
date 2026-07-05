@@ -4,15 +4,15 @@ import TodoItem from './TodoItem';
 const TodoList = ({ todos, onToggleStatus, onEdit, onDelete }) => {
   if (todos.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-        <div className="w-12 h-12 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 mb-3 border border-gray-100">
+      <div className="flex flex-col items-center justify-center py-16 px-4 text-center select-none">
+        <div className="text-gray-300/80 mb-4 animate-pulse">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-            strokeWidth={1.5}
+            strokeWidth={1.2}
             stroke="currentColor"
-            className="w-6 h-6"
+            className="w-10 h-10"
           >
             <path
               strokeLinecap="round"
@@ -21,11 +21,16 @@ const TodoList = ({ todos, onToggleStatus, onEdit, onDelete }) => {
             />
           </svg>
         </div>
-        <h3 className="text-sm font-semibold text-gray-700">Chưa có công việc nào</h3>
-        <p className="text-xs text-gray-400 mt-1">Hãy thêm một công việc mới hoặc đổi từ khóa tìm kiếm.</p>
+        <h3 className="text-xs font-bold text-gray-400 tracking-widest uppercase mb-1">
+          Chưa có công việc nào
+        </h3>
+        <p className="text-[11px] text-gray-400 font-normal leading-relaxed max-w-[240px]">
+          Hãy thêm một công việc mới hoặc thử thay đổi từ khóa tìm kiếm.
+        </p>
       </div>
     );
   }
+
 
   return (
     <div className="divide-y divide-gray-100/50">

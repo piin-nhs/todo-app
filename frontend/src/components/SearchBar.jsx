@@ -1,30 +1,24 @@
 import React from 'react';
 
-const SearchBar = ({ keyword, setKeyword, onSearch }) => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSearch();
-  };
-
+const SearchBar = ({ keyword, setKeyword }) => {
   return (
-    <form onSubmit={handleSubmit} className="w-full">
+    <div className="w-full">
       <div className="relative flex items-center">
         <input
           type="text"
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="Tìm kiếm công việc..."
-          className="w-full px-4 py-2.5 pl-10 bg-gray-50 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-200 text-sm"
+          className="w-full px-3 py-2 pl-8 bg-gray-50/50 text-gray-700 placeholder-gray-300 border border-gray-100/70 rounded-lg focus:outline-none focus:bg-gray-50/80 focus:border-gray-200/50 transition-all duration-200 text-xs"
         />
-        <div className="absolute left-3.5 text-gray-400">
+        <div className="absolute left-2.5 text-gray-300">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
-
             strokeWidth={2}
             stroke="currentColor"
-            className="w-5 h-5"
+            className="w-4 h-4"
           >
             <path
               strokeLinecap="round"
@@ -33,16 +27,9 @@ const SearchBar = ({ keyword, setKeyword, onSearch }) => {
             />
           </svg>
         </div>
-        <button
-          type="submit"
-          className="absolute right-2 px-3.5 py-1.2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm shadow-emerald-500/10 transition-all duration-200"
-        >
-          Tìm
-        </button>
       </div>
-    </form>
+    </div>
   );
 };
-
 
 export default SearchBar;

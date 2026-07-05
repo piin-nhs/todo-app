@@ -3,26 +3,29 @@ import React from 'react';
 const FilterBar = ({ currentFilter, onFilterChange }) => {
   const filters = [
     { value: 'all', label: 'Tất cả' },
-    { value: 'completed', label: 'Hoàn thành' },
+    { value: 'completed', label: 'Đã xong' },
     { value: 'pending', label: 'Chưa xong' },
   ];
 
   return (
-    <div className="flex bg-[#f3f4f6] p-1.5 rounded-xl border border-gray-200/50 shadow-inner w-full">
+    <div className="flex justify-start gap-5 border-b border-gray-200/50 pb-1.5 w-full select-none">
       {filters.map((filter) => {
+
         const isActive = currentFilter === filter.value;
         return (
           <button
             key={filter.value}
             type="button"
             onClick={() => onFilterChange(filter.value)}
-            className={`flex-1 text-center py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
-              isActive
-                ? 'bg-white text-emerald-600 shadow-md ring-1 ring-black/5'
-                : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100/50'
-            }`}
+            className={`pb-1 text-[11px] font-semibold tracking-widest uppercase transition-all duration-300 relative ${isActive
+                ? 'text-emerald-500'
+                : 'text-gray-400 hover:text-gray-600'
+              }`}
           >
             {filter.label}
+            {isActive && (
+              <span className="absolute bottom-0 left-0 right-0 h-[1.5px] bg-[#2ecc71] rounded-full"></span>
+            )}
           </button>
         );
       })}

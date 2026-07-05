@@ -33,9 +33,9 @@ const TodoForm = ({ initialTodo, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4 text-left">
       <div>
-        <label htmlFor="title" className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+        <label htmlFor="title" className="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1.5">
           Tiêu đề công việc *
         </label>
         <input
@@ -47,13 +47,13 @@ const TodoForm = ({ initialTodo, onSubmit, onCancel }) => {
             setError('');
           }}
           placeholder="Nhập tiêu đề..."
-          className="w-full px-4 py-2.5 bg-gray-50 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-200 text-sm"
+          className="w-full px-3.5 py-2.5 bg-gray-50/50 text-gray-700 placeholder-gray-300 border border-gray-200/50 rounded-lg focus:outline-none focus:bg-gray-50/80 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/10 transition-all duration-200 text-xs"
         />
-        {error && <p className="mt-1 text-xs text-rose-500 font-medium">{error}</p>}
+        {error && <p className="mt-1 text-[10px] text-rose-500 font-semibold tracking-wide">{error}</p>}
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">
+        <label htmlFor="description" className="block text-[10px] font-bold text-gray-400 tracking-wider uppercase mb-1.5">
           Mô tả chi tiết
         </label>
         <textarea
@@ -62,23 +62,23 @@ const TodoForm = ({ initialTodo, onSubmit, onCancel }) => {
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Nhập mô tả thêm (không bắt buộc)..."
           rows={3}
-          className="w-full px-4 py-2.5 bg-gray-50 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-200 text-sm resize-none"
+          className="w-full px-3.5 py-2.5 bg-gray-50/50 text-gray-700 placeholder-gray-300 border border-gray-200/50 rounded-lg focus:outline-none focus:bg-gray-50/80 focus:border-emerald-500/50 focus:ring-1 focus:ring-emerald-500/10 transition-all duration-200 text-xs resize-none"
         />
       </div>
 
-      <div className="flex gap-3 justify-end pt-2">
+      <div className="flex gap-2.5 justify-end pt-3">
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 active:scale-95 text-gray-600 text-sm font-semibold rounded-xl transition-all duration-200"
+            className="px-4 py-2 bg-gray-50 hover:bg-gray-100/80 active:scale-95 text-gray-400 hover:text-gray-600 text-xs font-semibold rounded-lg transition-all duration-200"
           >
             Hủy
           </button>
         )}
         <button
           type="submit"
-          className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white text-sm font-semibold rounded-xl shadow-md shadow-emerald-500/10 transition-all duration-200"
+          className="px-5 py-2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm shadow-emerald-500/10 transition-all duration-200"
         >
           {initialTodo ? 'Cập nhật' : 'Thêm công việc'}
         </button>
