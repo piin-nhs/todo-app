@@ -206,14 +206,14 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-white/95 backdrop-blur-sm p-8 flex flex-col justify-center rounded-lg z-20"
+              className="absolute inset-0 bg-white/95 backdrop-blur-sm p-4 md:p-8 flex flex-col justify-center rounded-lg z-20"
             >
               <motion.div
                 initial={{ scale: 0.95, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="bg-white p-6 rounded-lg border border-gray-200 shadow-lg"
+                className="bg-white p-5 md:p-6 rounded-lg border border-gray-200 shadow-lg w-full"
               >
                 <h2 className="text-xs font-bold text-gray-500 tracking-widest uppercase mb-5">
                   {editingTodo ? 'Chỉnh sửa công việc' : 'Thêm công việc mới'}
@@ -237,7 +237,7 @@ function App() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-white/95 backdrop-blur-sm p-8 flex flex-col justify-center items-center rounded-lg z-30 select-none"
+              className="absolute inset-0 bg-white/95 backdrop-blur-sm p-4 md:p-8 flex flex-col justify-center items-center rounded-lg z-30 select-none"
 
             >
               <motion.div
@@ -245,7 +245,7 @@ function App() {
                 animate={{ scale: 1, opacity: 1 }}
                 exit={{ scale: 0.95, opacity: 0 }}
                 transition={{ duration: 0.2, ease: "easeOut" }}
-                className="bg-white p-6 rounded-lg border border-gray-200 shadow-xl max-w-xs w-full text-center"
+                className="bg-white p-5 md:p-6 rounded-lg border border-gray-200 shadow-xl max-w-xs w-full text-center"
               >
                 <h3 className="text-xs font-bold text-gray-500 tracking-widest uppercase mb-3">
                   Xác nhận xóa
