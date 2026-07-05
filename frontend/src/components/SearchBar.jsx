@@ -14,13 +14,14 @@ const SearchBar = ({ keyword, setKeyword, onSearch }) => {
           value={keyword}
           onChange={(e) => setKeyword(e.target.value)}
           placeholder="Tìm kiếm công việc..."
-          className="w-full px-4 py-3 pl-11 bg-slate-800/50 text-slate-100 placeholder-slate-400 border border-slate-700/60 rounded-xl focus:outline-none focus:border-violet-500 focus:ring-1 focus:ring-violet-500/30 transition-all duration-200"
+          className="w-full px-4 py-2.5 pl-10 bg-gray-50 text-gray-800 placeholder-gray-400 border border-gray-200 rounded-xl focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500/20 transition-all duration-200 text-sm"
         />
-        <div className="absolute left-4 text-slate-400">
+        <div className="absolute left-3.5 text-gray-400">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
+
             strokeWidth={2}
             stroke="currentColor"
             className="w-5 h-5"
@@ -34,7 +35,7 @@ const SearchBar = ({ keyword, setKeyword, onSearch }) => {
         </div>
         <button
           type="submit"
-          className="absolute right-2 px-4 py-1.5 bg-violet-600 hover:bg-violet-500 active:scale-95 text-white text-sm font-medium rounded-lg shadow-md shadow-violet-500/20 transition-all duration-200"
+          className="absolute right-2 px-3.5 py-1.2 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white text-xs font-semibold rounded-lg shadow-sm shadow-emerald-500/10 transition-all duration-200"
         >
           Tìm
         </button>
@@ -42,5 +43,6 @@ const SearchBar = ({ keyword, setKeyword, onSearch }) => {
     </form>
   );
 };
+
 
 export default SearchBar;
